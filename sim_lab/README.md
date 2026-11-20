@@ -101,3 +101,21 @@ gövde çizimi BeeQueen ile değiştirilip ×2 büyütülmüş.
 - fixed v3 ölçümü: denge z, durulma süresi, trim. (İsteğe bağlı: v1 takla nedenini ayırmak için su hattından bırakma testi.)
 - G5: ek kütle, sönüm, itki eğrisi ve sınırları; hız ve dönüş testleri.
 - Gerçek kütle ve ağırlık merkezi (CAD / tartı) gelince tahminleri güncelle.
+
+## CAD doğrulaması (Fusion, Beequeen-v2 STEP/STL)
+Fusion'dan dışa aktarılan tam tekne STL'i (mm) `tools/hull_hydrostatics.py` yöntemiyle incelendi
+(motor pod'ları hacim hesabından çıkarıldı). Eski STL'den kurulan modelle karşılaştırma:
+
+| Büyüklük | CAD (Fusion) | Modelde kullanılan | Fark |
+|---|---|---|---|
+| Boy × genişlik | 1217.5 × 782.1 mm | 1207.8 × 782.1 mm | +1 cm (kıçtaki motorlar) |
+| Ponton yüksekliği (omurga → güverte altı) | 0.335 m | 0.332 m | 3 mm |
+| Su çekimi, 30 kg | **14.4 cm** | 14.3 cm (Gazebo: z = 0.1886) | 1 mm |
+| Su hattı alanı, 30 kg | 0.332 m² | 0.334 m² | %0.6 |
+| Ponton merkezleri arası | 0.517 m (±0.2585) | 0.517 m | — |
+| Sağ ponton hacmi (Fusion Properties) | 41.1 L, merkez y = −105 mm | STL'den merkez y = −104.9 mm | 0.1 mm |
+| Kaldırma merkezi, baştan | 0.735 m | 0.737 m | 2 mm |
+| Motor merkezi (iticiler) | baştan 1.144 m, omurganın 3.3 cm altı | baştan 1.158 m, omurganın 3.8 cm altı | ~1.5 cm |
+
+Yedek kaldırma: iki ponton toplam ~82 L → 30 kg'ın ~2.7 katı.
+Kütle hâlâ 30 kg varsayım (tartılmadı); CAD kütlesi kullanılmadı (gövdeler içi dolu katı).
