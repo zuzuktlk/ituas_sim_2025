@@ -85,9 +85,9 @@
     
       <inertial>
         <!-- TAHMIN (v1): toplam 30 kg (base 27.8 + 2x1.0 mahfaza + 2x0.1 pervane).
-             x: kaldirma merkezine esit (trim 0 varsayimi), z: su hattinin ~14 cm ustu.
+             x,y: motorlarla birlikte TOPLAM agirlik merkezi kaldirma merkezine (-0.013,-0.006) gelecek sekilde (v2), z: su hattinin ~14 cm ustu.
              Atalet: yaricap-jirasyon tahmini kxx=0.29, kyy=0.30, kzz=0.33 m. CAD gelince guncellenecek. -->
-        <pose>-0.013 -0.006 -0.05 0 0 0</pose>
+        <pose>0.0203 -0.0056 -0.05 0 0 0</pose>
         <mass>27.8</mass>
         <inertia>
           <ixx>2.34</ixx>
@@ -101,7 +101,7 @@
       
    <!-- PONTONLAR: STL govdesinden (olcek 1) katman katman uydurulmus kutular.
            Kesit V seklinde oldugu icin 4 katman; genislikler katman hacmine esitlendi.
-           Graded buoyancy bu kutularin su altindaki hacmini kullanir. -->
+           v2: kutular sadece temas/carpisma icin; kaldirmayi VRX Surface veriyor. -->
       <collision name='hull_left_1'>
         <pose>-0.047 0.252 -0.312 0 0 0</pose>
         <geometry><box><size>0.925 0.048 0.040</size></box></geometry>
@@ -309,7 +309,57 @@
       <velocity_control>true</velocity_control>
     </plugin>
 
-<!-- VRX Surface kaldirildi: tek kaldirma kaynagi dunyadaki graded buoyancy. -->
+<!-- KALDIRMA (v2/v3): VRX Surface, ponton basina 4 nokta. Her nokta, yaricapi 0.13 m olan
+     bir silindirin DIBI; su o noktanin ustune ciktikca daire kesiti kadar kaldirma, kuvvet
+     o noktada uygulanir (dogru donme momenti). Noktalarin z'si (-0.268) STL'den hesaplanan
+     30 kg su hattini (-0.188) verecek sekilde secildi. V kesite gore su hatti genisligi
+     ~1.6 kat fazla: yalpa/baş-kıç yay sertligi biraz yuksek (G7'de gercek veriyle bakilacak). -->
+<plugin filename="libSurface.so" name="vrx::Surface">
+  <link_name>base_link</link_name>
+  <hull_length>1.09</hull_length>
+  <hull_radius>0.13</hull_radius>
+  <fluid_level>0.0</fluid_level>
+  <points>
+      <point>-0.422 0.252 -0.268</point>
+      <point>-0.149 0.252 -0.268</point>
+      <point>0.123 0.252 -0.268</point>
+      <point>0.396 0.252 -0.268</point>
+  </points>
+  <!-- DALGA AYARI (v3): VRX Surface, <wavefield> verilmezse VARSAYILAN olarak PMS dalgasi
+       uretir (gain 1.0, periyot 5 s, toplam genlik ~0.38 m, 2 s'de devreye girer).
+       Duz su icin gain = 0. Dalgali deneyler icin gain'i artir. -->
+  <wavefield>
+    <topic>/beequeen/wavefield/parameters</topic>
+    <wave>
+      <model>PMS</model>
+      <period>5.0</period>
+      <gain>0.0</gain>
+    </wave>
+  </wavefield>
+</plugin>
+<plugin filename="libSurface.so" name="vrx::Surface">
+  <link_name>base_link</link_name>
+  <hull_length>1.09</hull_length>
+  <hull_radius>0.13</hull_radius>
+  <fluid_level>0.0</fluid_level>
+  <points>
+      <point>-0.422 -0.265 -0.268</point>
+      <point>-0.149 -0.265 -0.268</point>
+      <point>0.123 -0.265 -0.268</point>
+      <point>0.396 -0.265 -0.268</point>
+  </points>
+  <!-- DALGA AYARI (v3): VRX Surface, <wavefield> verilmezse VARSAYILAN olarak PMS dalgasi
+       uretir (gain 1.0, periyot 5 s, toplam genlik ~0.38 m, 2 s'de devreye girer).
+       Duz su icin gain = 0. Dalgali deneyler icin gain'i artir. -->
+  <wavefield>
+    <topic>/beequeen/wavefield/parameters</topic>
+    <wave>
+      <model>PMS</model>
+      <period>5.0</period>
+      <gain>0.0</gain>
+    </wave>
+  </wavefield>
+</plugin>
     
     
     

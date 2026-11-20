@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- FIXED v1: tek kaldirma kaynagi (graded buoyancy), 30 kg BeeQueen.
+<!-- FIXED v2: tek kaldirma kaynagi (teknedeki VRX Surface), 30 kg BeeQueen.
      Fizik motoru ve adim baseline ile ayni; sadece kaldirma modu ve tekne degisti.
      Hedef: tekne ~2 s icinde durulmali, su hatti base_link z = -0.19 (yani model z ~ +0.19). -->
 <sdf version="1.10">
@@ -17,17 +17,8 @@
     <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
     <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
 
-    <!-- Graded buoyancy: z<0 su (1000 kg/m3), z>0 hava (1 kg/m3).
-         Kutularin su altinda kalan hacmini hesaplar; su yuzeyini bilen TEK kaldirma kaynagi. -->
-    <plugin filename="gz-sim-buoyancy-system" name="gz::sim::systems::Buoyancy">
-      <graded_buoyancy>
-        <default_density>1000</default_density>
-        <density_change>
-          <above_depth>0</above_depth>
-          <density>1</density>
-        </density_change>
-      </graded_buoyancy>
-    </plugin>
+    <!-- v2: dunyada kaldirma eklentisi YOK. Tek kaldirma kaynagi teknedeki VRX Surface.
+         (v1 graded buoyancy ile tekne takla atti; nedeni henuz belirlenmedi.) -->
 
     <gravity>0 0 -9.8</gravity>
 
@@ -67,7 +58,7 @@
     <include>
       <uri>model://beequeen_fixed</uri>
       <name>boat</name>
-      <pose>0 0 0.35 0 0 0</pose>
+      <pose>0 0 0.30 0 0 0</pose>
     </include>
 
   </world>

@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<!-- REFERANS: VRX'in kendi RoboBoat01 modeli, HIC DEGISTIRILMEDEN, ayni duz su dunyasinda.
+     Beklenen: ~1-2 s icinde z = -0.077 m civarinda durulma. -->
+<sdf version="1.10">
+  <world name="ref_roboboat">
+
+    <physics name="default" type="dart">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <dart>
+        <collision_detector>bullet</collision_detector>
+      </dart>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+
+    <!-- v2: dunyada kaldirma eklentisi YOK. Tek kaldirma kaynagi teknedeki VRX Surface.
+         (v1 graded buoyancy ile tekne takla atti; nedeni henuz belirlenmedi.) -->
+
+    <gravity>0 0 -9.8</gravity>
+
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.8 1.0 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <light name="sun" type="directional">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.6 0.6 0.6 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ocean_surface">
+      <static>true</static>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>1000 1000</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.0 0.3 0.5 0.8</ambient>
+            <diffuse>0.0 0.4 0.6 0.9</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Isim "boat" kaldi: kontrol.py topic'leri (/model/boat/...) aynen calissin -->
+    <include>
+      <uri>model://roboboat01</uri>
+      <name>boat</name>
+      <pose>0 0 0 0 0 0</pose>
+      <!-- Olcum icin: teknenin konumunu /odom'a yayinlar (modelin kendisine dokunmadan) -->
+      <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+        <dimensions>3</dimensions>
+        <odom_publish_frequency>30</odom_publish_frequency>
+        <odom_topic>/odom</odom_topic>
+      </plugin>
+    </include>
+
+  </world>
+</sdf>
