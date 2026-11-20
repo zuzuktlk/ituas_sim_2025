@@ -151,9 +151,9 @@
       </visual>
     </link>
     
-    <!-- SOL PERVANE MAHFAZAsı -->
+    <!-- SOL PERVANE MAHFAZASI. v4: konum CAD'den (Beequeen-v2.stl, itici merkezi) -->
     <link name='left_housing_link'>
-      <pose>-0.434 0.248 -0.37 0 0 0</pose>
+      <pose>-0.420 0.251 -0.365 0 0 0</pose>
       <inertial>
         <mass>1.0</mass>
         <inertia>
@@ -169,7 +169,7 @@
     
     <!-- SOL PERVANE -->
     <link name='leftmotor_link'>
-      <pose>-0.435 0.248 -0.37 1.5708 0.0 -1.5708</pose>
+      <pose>-0.421 0.251 -0.365 1.5708 0.0 -1.5708</pose>
       <inertial>
         <mass>0.1</mass>
         <inertia>
@@ -194,7 +194,7 @@
     
     <!-- SAĞ PERVANE MAHFAZAsı -->
     <link name='right_housing_link'>
-      <pose>-0.434 -0.271 -0.37 0 0 0</pose>
+      <pose>-0.420 -0.269 -0.365 0 0 0</pose>
       <inertial>
         <mass>1.0</mass>
         <inertia>
@@ -210,7 +210,7 @@
     
     <!-- SAĞ PERVANE -->
     <link name='rightmotor_link'>
-      <pose>-0.435 -0.271 -0.37 1.5708 0.0 -1.5708</pose>
+      <pose>-0.421 -0.269 -0.365 1.5708 0.0 -1.5708</pose>
       <inertial>
         <mass>0.1</mass>
         <inertia>
@@ -299,6 +299,10 @@
       <fluid_density>1000</fluid_density>
       <propeller_diameter>0.11</propeller_diameter>
       <velocity_control>true</velocity_control>
+      <!-- v4: CubeMars W30 sinirlari (uretici: ileri 6.7-7.7 kgf, geri 5.0-5.8 kgf; ust uclar).
+           Bu modelde NEGATIF itki = ILERI. Statik (bollard) degerler; hizla itki dususu modellenmedi. -->
+      <min_thrust_cmd>-75.5</min_thrust_cmd>
+      <max_thrust_cmd>56.9</max_thrust_cmd>
     </plugin>
 
     <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
@@ -307,6 +311,10 @@
       <fluid_density>1000</fluid_density>
       <propeller_diameter>0.11</propeller_diameter>
       <velocity_control>true</velocity_control>
+      <!-- v4: CubeMars W30 sinirlari (uretici: ileri 6.7-7.7 kgf, geri 5.0-5.8 kgf; ust uclar).
+           Bu modelde NEGATIF itki = ILERI. Statik (bollard) degerler; hizla itki dususu modellenmedi. -->
+      <min_thrust_cmd>-75.5</min_thrust_cmd>
+      <max_thrust_cmd>56.9</max_thrust_cmd>
     </plugin>
 
 <!-- KALDIRMA (v2/v3): VRX Surface, ponton basina 4 nokta. Her nokta, yaricapi 0.13 m olan
@@ -365,28 +373,30 @@
     
 
     <!-- VRX HYDRODYNAMICS: sonum degerleri takimin (G5'te gozden gecirilecek) -->
+    <!-- SONUM (v4). Takimin degerleri (xU 100, xUU 150 ...) RoboBoat sablonunun ~25 kati idi:
+         40+40 N'de 0.47 m/s. Yeni degerler KABA TAHMIN, gercek loglarla (G7) ayarlanacak:
+         - ileri (x): surtunme (ITTC-57, islak alan 0.862 m2) 1 m/s'de ~2-3 N; kisa-dolgun
+           pontonlarda dalga direnci 1-2 m/s'de bunun birkac kati olabilir -> xU 4, xUU 15.
+           Logdan ayar: xUU ~= toplam itki / hiz^2 (sabit gazda duz gidis).
+         - yan (y): yanal alan ~0.29 m2, Cd ~1 -> yVV ~150.
+         - donme (z): ayni yanal akis, boy boyunca entegral -> nRR ~6.
+         - dalma/yalpa/bas-kic (zW, kP, mQ): takimin degerleri, yuzme testinde dogrulandi. -->
     <plugin filename="libSimpleHydrodynamics.so" name="vrx::SimpleHydrodynamics">
       <link_name>base_link</link_name>
       <xDotU>0.0</xDotU>
       <yDotV>0.0</yDotV>
       <nDotR>0.0</nDotR>
-      
-    <xU>100.0</xU>
-      
-      <xUU>150.0</xUU>
-      
-      <yV>50.0</yV>
-      <yVV>100.0</yVV>
-      
+      <xU>4.0</xU>
+      <xUU>15.0</xUU>
+      <yV>10.0</yV>
+      <yVV>150.0</yVV>
       <zW>200.0</zW>
-      
       <kP>12.0</kP>
       <kPP>24.0</kPP>
       <mQ>36.0</mQ>
       <mQQ>35.0</mQQ>
-      
-      <nR>30.0</nR>
-      <nRR>50.0</nRR>
+      <nR>3.0</nR>
+      <nRR>6.0</nRR>
     </plugin>
     
     
